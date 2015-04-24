@@ -1,0 +1,30 @@
+@maxWidth: 1280px; //最大宽度
+@imgPath: './img/';
+//顶部颜色
+@colorBgTop: #4f4f55;
+@colorFontTop: #acacac;
+
+@colorFontBlack: #202020;
+@colorFontGray: #999999;
+@colorFontGray2: #626262; //深灰
+
+.w() {
+    margin: auto;
+    width:1000px;
+    height: auto;
+    overflow: hidden;
+}
+/*字体、颜色*/
+.f-YH(){font-family:"Microsoft YaHei","SimSun" !important;}
+.f-num() {font-family:"Verdana";}
+.tc(){text-align:center;}
+.red() {color:#f35f91;}
+
+/* border-radius */
+.border-radius(@radius:3px) {
+    border-radius:@radius; -moz-border-radius:@radius; -webkit-border-radius:@radius;
+}
+/* 表格的样式 */
+.th() {
+    border-top:1px solid #dedede;border-bottom:1px solid #dedede;font-weight:bold; height:40px;line-height:40px;background:url(img/member/address_table_th_bg.gif) repeat-x;
+}

@@ -3,15 +3,18 @@ var path = require('path')
 var mongoose = require('mongoose')
 var _ = require('underscore')
 var Movie = require('./models/movie')
-var bodyParser = require('body-parser');
+var Utils = require('./lib/tools/utils')
+var bodyParser = require('body-parser')
 var app = express()
 var port = process.env.PORT || 3000
+
+var config = Utils.getJSONSync("config.json")
 
 mongoose.connect('mongodb://localhost/movie')
 
 app.set('views', './views/pages')
 app.set('view engine', 'jade')
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public/assets')))
 app.locals.moment = require("moment")
 app.listen(port)
@@ -36,9 +39,9 @@ app.get('/', function(req, res) {
 app.get('/movie/:id', function(req, res) {
 	var _id = req.params.id
 	Movie.findById(_id, function(err, movie) {
-		res.reder('detail',{
-			title: 'movie ' + movie.title,
-			movie: movie
+		res.render('detail', {
+			title: 'movie' + movie.title,
+		 	movie: movie
 		})
 	})
 })
@@ -48,14 +51,14 @@ app.get('/admin/movie', function(req, res) {
 	res.render('admin',{
 		title: "movie 后台录入页",
 		movie:{
-			title:"1",
-			doctor:"2",
-			country:"3",
-			language:"4",
-			poster:"5",
-			flash:"6",
-			year:"7",
-			summary:"8"
+			title:"",
+			doctor:"",
+			country:"",
+			language:"",
+			poster:"",
+			flash:"",
+			year:"",
+			summary:""
 		}
 	})
 })
@@ -76,29 +79,20 @@ app.get('/admin/update/:id', function(req, res){
 
 // admin post movie
 app.post('/admin/movie/new', function(req, res){
-	var _id = req.body._id
-	var movieObj = {
-		"title":req.body.title,
-		"doctor":req.body.doctor,
-		"country":req.body.country,
-		"language":req.body.language,
-		"poster":req.body.poster,
-		"year":req.body.year,
-		"summary":req.body.summary
-	}
+	var id = req.body.movie._id
+	var movieObj = req.body.movie
 	var _movie
-	if(_id !== ''){
-		Movie.findById(_id, function(err, movies) {
+	if(id !== ''){
+		Movie.findById(id, function(err, movie) {
 			if (err) {
 				console.log(err);
 			}
-
 			_movie = _.extend(movie, movieObj)
 			_movie.save(function(err, movie) {
 				if (err) {
 					console.log(err);
 				}
-				res.redirect('/movie/' + _id)
+				res.redirect('/movie/' + id)
 			})
 		})
 	}else{
@@ -106,7 +100,7 @@ app.post('/admin/movie/new', function(req, res){
 			doctor: movieObj.doctor,
 			title: movieObj.title,
 			country: movieObj.country,
-			langugae: movieObj.language,
+			language: movieObj.language,
 			year: movieObj.year,
 			poster: movieObj.poster,
 			summary: movieObj.summary,
@@ -121,6 +115,7 @@ app.post('/admin/movie/new', function(req, res){
 		})
 	}
 })
+
 
 // list page
 app.get('/admin/list', function(req, res) {
@@ -137,11 +132,10 @@ app.get('/admin/list', function(req, res) {
 })
 
 // list delete movie
-app.get('/admin/list', function(req, res){
-	var _id = req.qurey._id
-
+app.delete('/admin/list', function(req, res){
+	var id = req.query.id
 	if(id){
-		Movie.remove({_id: _id}, function(err, movie){
+		Movie.remove({_id: id}, function(err, movie){
 			if(err){
 				console.log(err);
 			}else{

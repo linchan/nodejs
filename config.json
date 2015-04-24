@@ -1,0 +1,23 @@
+{
+	"host": "http://tms.hz.ve.cn/",
+	"port": 4000,
+	"buildPath": "../build",
+	"pagePath": "../page",
+	"dev"
+	"dev": {
+		"host": "http://localhost:4000/",
+		"port": 4000
+	},
+	"moduleTagMap": {
+		"mobile": "Mobile",
+		"pc": "PC",
+		"data": "数据模块",
+		"itemlist": "商品列表",
+		"nicebrand": "优品牌",
+		"mama": "内衣课堂",
+		"dapei": "搭配指南",
+		"tenday": "每日十件",
+		"brand" "品牌"
+	},
+	"superAdmin": ["11000090"]
+} 

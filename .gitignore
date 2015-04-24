@@ -1,4 +1,5 @@
 node_modules/
 bower_components/
 public/bower_components/
-public/assets/libs
+public/assets/
+npm-debug.log

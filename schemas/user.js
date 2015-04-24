@@ -1,14 +1,13 @@
 var mongoose = require('mongoose')
+var bcrypt = require('bcrypt')
+var SALT_WORK_FACTOR = 10
 
-var MovieSchema = new mongoose.Schema({
-	doctor: String,
-	title: String,
-	language: String,
-	country: String,
-	summary: String,
-	flash: String,
-	poster: String,
-	year: String,
+var userSchema = new mongoose.Schema({
+	name: {
+		unique: true,
+		type: String
+	},
+	password: String,
 	meta: {
 		createAt: {
 			type: Date,
@@ -21,16 +20,25 @@ var MovieSchema = new mongoose.Schema({
 	}
 })
 
-MovieSchema.pre('save', function(next){
+userSchema.pre('save', function(next){
 	if(this.isNew){
 		this.meta.createAt = this.meta.updateAt = Date.now()
 	}else{
 		this.meta.updateAt = Date.now()
 	}
+
+	bcrypt.genSalt(SALT_WORK_FACTOR,function(err, salt){
+		if(err) return next(err)
+		bcrypt.hash(user.password, salt, function(err, hash) {
+			user.password = hash
+			next()
+		})
+	})
+
 	next()
 })
 
-MovieSchema.statics = {
+userSchema.statics = {
 	fetch: function(cb) {
 		return this
 			.find({})
@@ -44,4 +52,4 @@ MovieSchema.statics = {
 	}
 }
 
-module.exports = MovieSchema
+module.exports = userSchema
