@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 
-var MovieSchema = new mongoose.Schema({
+var movieSchema = new mongoose.Schema({
 	doctor: String,
 	title: String,
 	language: String,
@@ -21,7 +21,7 @@ var MovieSchema = new mongoose.Schema({
 	}
 })
 
-MovieSchema.pre('save', function(next){
+movieSchema.pre('save', function(next){
 	if(this.isNew){
 		this.meta.createAt = this.meta.updateAt = Date.now()
 	}else{
@@ -30,7 +30,7 @@ MovieSchema.pre('save', function(next){
 	next()
 })
 
-MovieSchema.statics = {
+movieSchema.statics = {
 	fetch: function(cb) {
 		return this
 			.find({})
@@ -44,4 +44,4 @@ MovieSchema.statics = {
 	}
 }
 
-module.exports = MovieSchema
+module.exports = movieSchema

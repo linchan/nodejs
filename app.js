@@ -3,6 +3,7 @@ var path = require('path')
 var mongoose = require('mongoose')
 var _ = require('underscore')
 var Movie = require('./models/movie')
+var User = require('./models/user')
 var Utils = require('./lib/tools/utils')
 var bodyParser = require('body-parser')
 var app = express()
@@ -32,8 +33,70 @@ app.get('/', function(req, res) {
 			movies:movies
 		})
 	})
-
 })
+
+// sign up
+app.post('/user/signup', function(req, res){
+	var _user = req.body.user
+
+	// user name check	
+	User.find({name:_user.name},function(err, user){
+		if(err){console.log(err)}
+		if(user){
+			return res.redirect('/')
+		}else{
+			var user = new User(_user)
+			user.save(function(err, user){
+				if(err){
+					console.log(err)
+				}
+
+				res.redirect("/admin/userlist")
+			})
+		}
+	})
+})
+
+
+// sign in
+app.post('/user/signin', function(req, res){
+	var _user = req.body.user
+	var name = _user.name
+	var password = _user.password
+
+	User.findOne({name: name}, function(err, user){
+		if(err){console.log(err)}
+
+		if(!user){
+			return res.redirect("/")
+		}
+
+		user.comparePassword(password, function(err, isMatch){
+			if(err){console.log(err)}
+
+			if(isMatch){
+				return res.redirect('/')
+			}else{
+				console.log('Password is not matched')
+			}
+		})
+	})
+})
+
+// userlist page
+app.get('/admin/userlist', function(req, res) {
+	User.fetch(function(err, users){
+		if(err){
+			console.log(err)
+		}
+
+		res.render('userlist',{
+			title: "user 列表页",
+			users:users
+		})
+	})
+})
+
 
 // detail page
 app.get('/movie/:id', function(req, res) {
