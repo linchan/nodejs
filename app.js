@@ -57,7 +57,6 @@ app.post('/user/signup', function(req, res){
 	})
 })
 
-
 // sign in
 app.post('/user/signin', function(req, res){
 	var _user = req.body.user

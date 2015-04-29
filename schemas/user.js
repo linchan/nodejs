@@ -41,11 +41,17 @@ userSchema.pre('save', function(next){
 
 userSchema.methods = {
 	comparePassword: function(_password, cb){
-		bcrypt.compare(_password, this.password, function(err, isMatch){
-			if(err) return cb(err)
+		// bcrypt.compare(_password, this.password, function(err, isMatch){
+		// 	if(err) return cb(err)
 
-			cb(null, isMatche)
-		})
+		// 	cb(null, isMatche)
+		// })
+
+		if(_password === this.password){
+			cb(null, true)	
+		}else{
+			cb(null, false)
+		}
 	}
 }
 
